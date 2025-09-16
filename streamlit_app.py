@@ -84,6 +84,11 @@ with st.spinner("Loading model and building index… (cached)"):
     bundle = _load_bundle(csv_path)
 st.success("Index ready.", icon="✅")
 
+with st.expander("Debug: dataset columns", expanded=False):
+    import pandas as pd
+    sample_df = pd.read_csv(csv_path, nrows=1)
+    st.write(list(sample_df.columns))
+
 default_writeup = (
     "Interested in polymer electronics, conjugated backbones, "
     "SEC/GPC in CHCl3, and strong mentorship for industry-oriented careers."

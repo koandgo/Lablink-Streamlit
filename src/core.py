@@ -71,16 +71,34 @@ def load_profiles_csv_prototype(csv_path: str, key_text_cols: List[str] | None =
     """
     df = pd.read_csv(csv_path)
 
-    # Ensure these exist (will be blank if missing)
-    for c in ("pi_name", "source_url", "email", "department"):
+    # Ensure always-present fields
+    for c in ("pi_name", "source_url", "department"):
         if c not in df.columns:
             df[c] = ""
 
+    # --- Email column detection (handles your 'contact_email') ---
+    email_col_candidates = [
+        "email", "contact_email", "pi_email", "contact", "e-mail", "Email", "E-mail"
+    ]
+    email_col = next((c for c in email_col_candidates if c in df.columns), None)
+    if email_col is None:
+        # Fall back to blank if no email-like column is present
+        df["email"] = ""
+    else:
+        # Clean common NaN/None string artifacts
+        df["email"] = (
+            df[email_col]
+            .astype(str)
+            .replace({"nan": "", "NaN": "", "None": ""}, regex=False)
+            .str.strip()
+        )
+
+    # Build text field from available narrative columns
     cols = [c for c in (key_text_cols or CANDIDATE_TEXT_COLS) if c in df.columns]
     df["text"] = df.apply(lambda r: build_profile_text(r, cols), axis=1).astype(str).str.strip()
     df = df[df["text"].str.len() >= min_chars].copy()
 
-    # Deterministic ID using pi_name + source_url (not shown in UI later)
+    # Deterministic ID (not shown in UI)
     def _mkid(r):
         basis = f"{r.get('pi_name','')}|{r.get('source_url','')}".strip()
         if basis:
@@ -89,10 +107,10 @@ def load_profiles_csv_prototype(csv_path: str, key_text_cols: List[str] | None =
 
     df["id"] = df.apply(_mkid, axis=1)
     df["name"] = df.get("pi_name", "").astype(str).fillna("")
-    df["email"] = df.get("email", "").astype(str).fillna("")
     df["department"] = df.get("department", "").astype(str).fillna("")
 
     return df[["id", "name", "email", "department", "text"]].drop_duplicates("id").reset_index(drop=True)
+
 
 # ------------------------- Embeddings & index -------------------------
 def l2_normalize(v: np.ndarray) -> np.ndarray:
