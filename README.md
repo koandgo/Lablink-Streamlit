@@ -26,18 +26,34 @@ streamlit run streamlit_app.py
 
 1. Push this folder to a GitHub repo (keep `streamlit_app.py` at the root).
 2. In Streamlit Cloud: **New app → Select repo → Main file path: `streamlit_app.py`**.
-3. No secrets are required for the default flow. If you later add keys, set them in **App → Settings → Secrets**.
+3. No secrets are required for the default flow. If keys are added for using an alternative model later on, set them in **App → Settings → Secrets**.
+
+## Deploy to Streamlit Local
+
+1. **Clone or download** this repo (keep `streamlit_app.py` at the repo root and `data/Prototype Dataset.csv` in `data/`).
+2. **Create a virtual environment** and **install dependencies** from `requirements.txt`.
+3. **Launch the app** with `streamlit run streamlit_app.py` (no secrets required for the default sample).
+
+### Windows (PowerShell)
+```powershell
+cd "C:\path\to\Lablink-Streamlit"
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+
 
 ## Structure
 
 ```
 vertical_slice_app/
 ├─ data/
-│  └─ Prototype Dataset.csv            # provided sample (no keys required)
+│  └─ Synthetic_Dataset.csv            # provided example profiles (no keys required)
 ├─ docs/
-│  └─ screenshot.png                   # (optional) add your own screenshot
+│  └─ Lablink_homepage.png             # example site running and outputs
+│  └─ Lablink_output.png 
 ├─ src/
-│  └─ core.py                          # refactored functions, minimal deps
+│  └─ core.py                          # refactored functions
 ├─ streamlit_app.py                    # simple UI importing src.core
 ├─ requirements.txt
 └─ README.md
@@ -46,30 +62,18 @@ vertical_slice_app/
 ## Minimal dependencies
 
 - `streamlit`, `pandas`, `numpy`, `scikit-learn`, `sentence-transformers`  
-- We **do not** hard‑code any keys. If you introduce APIs later, use Streamlit Secrets:
+- On this slice, no keys are required. If you introduce APIs later for calling another model, use Streamlit Secrets:
 
 ```toml
 # .streamlit/secrets.toml (do NOT commit)
 OPENAI_API_KEY = "sk-..."
 ```
 
-And in code:
 
-```python
-import streamlit as st
-OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY")
-```
+## Screenshots 
+If the script is working you should first be presented with this page followed by this output
 
-## Sanity checks / pitfalls
-
-- **Determinism:** With the bundled CSV and model name unchanged, results are deterministic.
-- **Cold start:** First run downloads the sentence-transformers model (~90MB). Cached afterwards.
-- **Model change:** If you change the model name, results will differ by design.
-- **CSV schema:** If you bring your own CSV, keep columns like `pi_name`, `research_summary`, `keywords` etc.
-- **Memory:** On Streamlit Cloud free tier, keep datasets modest (<10–20k rows) or precompute embeddings.
-
-## Screenshots / GIFs
-
-Add a screenshot (e.g., `docs/screenshot.png`) and embed it here:
-
-![screenshot](docs/screenshot.png)
+Homepage:
+![screenshot](docs/Lablink_homepage.png)
+Example Output:
+![screenshot](docs/Lablink_output.png)
