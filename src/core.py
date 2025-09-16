@@ -135,7 +135,7 @@ def build_vector_space(df: pd.DataFrame, model_name: str = "sentence-transformer
     texts = df["text"].tolist()
     ids   = df["id"].tolist()
     names = df["name"].tolist()
-    emails = df["email"].tolist()
+    emails = df["contact_email"].tolist()
     departments = df["department"].tolist()
 
     vecs = model.encode(texts, convert_to_numpy=True, show_progress_bar=False)

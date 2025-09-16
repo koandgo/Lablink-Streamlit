@@ -71,7 +71,7 @@ st.caption("Paste your interests; see the closest PI profiles from the sample da
 
 with st.sidebar:
     st.header("Settings")
-    csv_path = st.text_input("Dataset path", "data/Prototype Dataset.csv")
+    csv_path = st.text_input("Dataset path", "data/Synthetic_Dataset.csv")
     k = st.slider("Top-K", min_value=1, max_value=10, value=5, step=1)
     min_sim = st.slider("Min similarity", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
 
