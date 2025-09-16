@@ -70,7 +70,7 @@ def load_profiles_csv_prototype(csv_path: str, key_text_cols: List[str] | None =
     Returns a reduced DataFrame with id, name, email, department, text.
     """
     df = pd.read_csv(csv_path)
-
+    temp_email = df.get("contact_email", "").astype(str).fillna("")
     # Ensure these exist (will be blank if missing)
     for c in ("pi_name", "source_url", "contact_email", "department"):
         if c not in df.columns:
@@ -89,7 +89,7 @@ def load_profiles_csv_prototype(csv_path: str, key_text_cols: List[str] | None =
 
     df["id"] = df.apply(_mkid, axis=1)
     df["name"] = df.get("pi_name", "").astype(str).fillna("")
-    df["email"] = df.get("contact_email", "").astype(str).fillna("")
+    df["email"] = temp_email #df.get("contact_email", "").astype(str).fillna("")
     df["department"] = df.get("department", "").astype(str).fillna("")
 
     return df[["id", "name", "email", "department", "text"]].drop_duplicates("id").reset_index(drop=True)
