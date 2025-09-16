@@ -76,16 +76,12 @@ def load_profiles_csv_prototype(csv_path: str, key_text_cols: List[str] | None =
         if c not in df.columns:
             df[c] = ""
 
-    # --- Email column detection (handles your 'contact_email') ---
-    email_col_candidates = [
-        "email", "contact_email", "pi_email", "contact", "e-mail", "Email", "E-mail"
-    ]
+    # --- Email column detection (covers your 'contact_email') ---
+    email_col_candidates = ["email", "contact_email", "pi_email", "contact", "e-mail", "Email", "E-mail"]
     email_col = next((c for c in email_col_candidates if c in df.columns), None)
     if email_col is None:
-        # Fall back to blank if no email-like column is present
         df["email"] = ""
     else:
-        # Clean common NaN/None string artifacts
         df["email"] = (
             df[email_col]
             .astype(str)
@@ -110,6 +106,7 @@ def load_profiles_csv_prototype(csv_path: str, key_text_cols: List[str] | None =
     df["department"] = df.get("department", "").astype(str).fillna("")
 
     return df[["id", "name", "email", "department", "text"]].drop_duplicates("id").reset_index(drop=True)
+
 
 
 # ------------------------- Embeddings & index -------------------------
