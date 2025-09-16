@@ -118,7 +118,7 @@ def top_k_matches(query_vec: np.ndarray, bundle: Dict, k: int = 5, min_similarit
             continue
         snippet = texts[i] if len(texts[i]) <= 250 else (texts[i][:250] + "…")
         rows.append({"rank": r, "name": names[i], "similarity": float(sim), "snippet": snippet}) #"id": ids[i], "name": names[i], "similarity": float(sim), "snippet": snippet})
-    return pd.DataFrame(rows, columns=["rank","id","name","similarity","snippet"])
+    return pd.DataFrame(rows, columns=["rank","name","similarity","snippet"])#"id","name","similarity","snippet"])
 
 def generate_bundle(csv_path: str = "data/Prototype Dataset.csv", model_name: str = "sentence-transformers/all-MiniLM-L6-v2") -> Dict:
     """Convenience pipeline: load CSV → prep text → build index."""
