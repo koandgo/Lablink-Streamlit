@@ -68,7 +68,7 @@ MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 BUNDLE_SCHEMA_VERSION = "v2-email-mapped"
 
 st.title("🔬 Lab Match — Vertical Slice")
-st.caption("Paste your interests; see the closest PI profiles from the sample dataset. Deterministic for fixed model + data.")
+st.caption("Paste your interests and aspirations; see the closest PI profiles from the example dataset.")
 
 # with st.sidebar:
 #     st.header("Settings")
@@ -95,9 +95,9 @@ with st.sidebar:
     csv_path = st.text_input("Dataset path", "data/Synthetic_Dataset.csv")
     k = st.slider("Top-K", min_value=1, max_value=10, value=5, step=1)
     min_sim = st.slider("Min similarity", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-    if st.button("🔁 Rebuild index (clear cache)"):
-        _load_bundle.clear()  # clears @st.cache_resource
-        st.experimental_rerun()
+    # if st.button("🔁 Rebuild index (clear cache)"):
+    #     _load_bundle.clear()  # clears @st.cache_resource
+    #     st.experimental_rerun()
 
 with st.spinner("Loading model and building index… (cached)"):
     bundle = _load_bundle(csv_path, BUNDLE_SCHEMA_VERSION)
