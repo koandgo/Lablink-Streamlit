@@ -72,7 +72,7 @@ def load_profiles_csv_prototype(csv_path: str, key_text_cols: List[str] | None =
     df = pd.read_csv(csv_path)
 
     # Ensure these exist (will be blank if missing)
-    for c in ("pi_name", "source_url", "email", "department"):
+    for c in ("pi_name", "source_url", "contact_email", "department"):
         if c not in df.columns:
             df[c] = ""
 
@@ -89,7 +89,7 @@ def load_profiles_csv_prototype(csv_path: str, key_text_cols: List[str] | None =
 
     df["id"] = df.apply(_mkid, axis=1)
     df["name"] = df.get("pi_name", "").astype(str).fillna("")
-    df["email"] = df.get("email", "").astype(str).fillna("")
+    df["email"] = df.get("contact_email", "").astype(str).fillna("")
     df["department"] = df.get("department", "").astype(str).fillna("")
 
     return df[["id", "name", "email", "department", "text"]].drop_duplicates("id").reset_index(drop=True)
@@ -135,7 +135,7 @@ def build_vector_space(df: pd.DataFrame, model_name: str = "sentence-transformer
     texts = df["text"].tolist()
     ids   = df["id"].tolist()
     names = df["name"].tolist()
-    emails = df["contact_email"].tolist()
+    emails = df["email"].tolist()
     departments = df["department"].tolist()
 
     vecs = model.encode(texts, convert_to_numpy=True, show_progress_bar=False)
