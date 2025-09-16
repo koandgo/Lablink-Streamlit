@@ -43,8 +43,10 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 
 
-## Structure
 
+
+```
+## Structure
 ```
 vertical_slice_app/
 ├─ data/
