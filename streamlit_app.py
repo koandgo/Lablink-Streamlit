@@ -65,6 +65,7 @@ st.set_page_config(page_title="Lab Match (Vertical Slice)", layout="wide")
 
 # Fixed model (no ability to change in UI)
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+BUNDLE_SCHEMA_VERSION = "v2-email-mapped"
 
 st.title("🔬 Lab Match — Vertical Slice")
 st.caption("Paste your interests; see the closest PI profiles from the sample dataset. Deterministic for fixed model + data.")
@@ -75,15 +76,33 @@ with st.sidebar:
     k = st.slider("Top-K", min_value=1, max_value=10, value=5, step=1)
     min_sim = st.slider("Min similarity", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
 
+# @st.cache_resource(show_spinner=False)
+# def _load_bundle(_csv_path: str):
+#     # Use fixed model name (no user control)
+#     return generate_bundle(_csv_path, model_name=MODEL_NAME)
+
+# with st.spinner("Loading model and building index… (cached)"):
+#     bundle = _load_bundle(csv_path)
+# st.success("Index ready.", icon="✅")
 @st.cache_resource(show_spinner=False)
-def _load_bundle(_csv_path: str):
-    # Use fixed model name (no user control)
+def _load_bundle(_csv_path: str, _schema_version: str):
+    # schema_version is unused but part of the cache key
+    from src.core import generate_bundle
     return generate_bundle(_csv_path, model_name=MODEL_NAME)
 
-with st.spinner("Loading model and building index… (cached)"):
-    bundle = _load_bundle(csv_path)
-st.success("Index ready.", icon="✅")
+with st.sidebar:
+    st.header("Settings")
+    csv_path = st.text_input("Dataset path", "data/Prototype Dataset.csv")
+    k = st.slider("Top-K", min_value=1, max_value=10, value=5, step=1)
+    min_sim = st.slider("Min similarity", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+    if st.button("🔁 Rebuild index (clear cache)"):
+        _load_bundle.clear()  # clears @st.cache_resource
+        st.experimental_rerun()
 
+with st.spinner("Loading model and building index… (cached)"):
+    bundle = _load_bundle(csv_path, BUNDLE_SCHEMA_VERSION)
+st.success("Index ready.", icon="✅")
+###
 default_writeup = (
     "Interested in polymer electronics, conjugated backbones, "
     "SEC/GPC in CHCl3, and strong mentorship for industry-oriented careers."
