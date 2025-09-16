@@ -28,20 +28,7 @@ streamlit run streamlit_app.py
 2. In Streamlit Cloud: **New app → Select repo → Main file path: `streamlit_app.py`**.
 3. No secrets are required for the default flow. If keys are added for using an alternative model later on, set them in **App → Settings → Secrets**.
 
-## Deploy to Streamlit Local
 
-1. **Clone or download** this repo (keep `streamlit_app.py` at the repo root and `data/Synthetic_Dataset.csv` in `data/`).
-2. **Create a virtual environment** and **install dependencies** from `requirements.txt`.
-3. **Launch the app** with `streamlit run streamlit_app.py` (no secrets required for the default sample).
-
-### Windows (PowerShell)
-```powershell
-cd "C:\path\to\Lablink-Streamlit"
-python -m venv .venv
-.\.venv\Scripts\activate
-pip install -r requirements.txt
-streamlit run streamlit_app.py
-```
 ## Structure
 ```
 vertical_slice_app/
