@@ -1,7 +1,7 @@
 
 # Lab Match — Vertical Slice (Streamlit)
 
-A tiny, deterministic demo that embeds PI/lab profiles and lets a student paste their interests to find the closest matches.
+A Lablink demo that embeds PI/lab profiles and lets a student paste their interests and aspirations to find the closest matches.
 
 ## Quickstart
 
