@@ -19,7 +19,7 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-> The app loads `data/Prototype Dataset.csv` and builds a cosine-similarity index with `sentence-transformers/all-MiniLM-L6-v2`.  
+> The app loads `data/Synthetic_Dataset.csv` and builds a cosine-similarity index with `sentence-transformers/all-MiniLM-L6-v2`.  
 > Results are deterministic for a fixed model + dataset.
 
 ## Deploy to Streamlit Cloud
@@ -30,7 +30,7 @@ streamlit run streamlit_app.py
 
 ## Deploy to Streamlit Local
 
-1. **Clone or download** this repo (keep `streamlit_app.py` at the repo root and `data/Prototype Dataset.csv` in `data/`).
+1. **Clone or download** this repo (keep `streamlit_app.py` at the repo root and `data/Synthetic_Dataset.csv` in `data/`).
 2. **Create a virtual environment** and **install dependencies** from `requirements.txt`.
 3. **Launch the app** with `streamlit run streamlit_app.py` (no secrets required for the default sample).
 
