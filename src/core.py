@@ -41,29 +41,6 @@ def build_profile_text(row: pd.Series, cols: List[str]) -> str:
                 parts.append(t)
     return " | ".join(parts)
 
-# def load_profiles_csv_prototype(csv_path: str, key_text_cols: List[str] | None = None, min_chars: int = 20) -> pd.DataFrame:
-#     """
-#     Load CSV and prepare text for embedding.
-#     Returns a reduced DataFrame with just id, name, text.
-#     """
-#     df = pd.read_csv(csv_path)
-#     for c in ("pi_name","source_url"):
-#         if c not in df.columns:
-#             df[c] = ""
-#     cols = [c for c in (key_text_cols or CANDIDATE_TEXT_COLS) if c in df.columns]
-#     df["text"] = df.apply(lambda r: build_profile_text(r, cols), axis=1).astype(str).str.strip()
-#     df = df[df["text"].str.len() >= min_chars].copy()
-
-#     # deterministic ID using pi_name + source_url fallback
-#     def _mkid(r):
-#         basis = f"{r.get('pi_name','')}|{r.get('source_url','')}"
-#         basis = basis.strip()
-#         if basis:
-#             return hashlib.md5(basis.encode("utf-8")).hexdigest()
-#         return f"row-{int(r.name)}"
-#     df["id"] = df.apply(_mkid, axis=1)
-#     df["name"] = df.get("pi_name", "").astype(str).fillna("")
-#     return df[["id","name","text"]].drop_duplicates("id").reset_index(drop=True)
 def load_profiles_csv_prototype(csv_path: str, key_text_cols: List[str] | None = None, min_chars: int = 20) -> pd.DataFrame:
     """
     Load CSV and prepare text for embedding.
@@ -115,32 +92,7 @@ def l2_normalize(v: np.ndarray) -> np.ndarray:
     n = np.linalg.norm(v, axis=1, keepdims=True).clip(min=1e-12)
     return (v / n).astype(np.float32)
 
-# def build_vector_space(df: pd.DataFrame, model_name: str = "sentence-transformers/all-MiniLM-L6-v2") -> Dict:
-#     """
-#     Build a cosine-similarity search index over profile texts.
-#     Returns a bundle dict with model, vectors, index, ids, names, texts.
-#     """
-#     model = SentenceTransformer(model_name)
-#     texts = df["text"].tolist()
-#     ids   = df["id"].tolist()
-#     names = df["name"].tolist()
-#     emails = df["emails"].tolist()
 
-#     vecs = model.encode(texts, convert_to_numpy=True, show_progress_bar=False)
-#     vecs = l2_normalize(np.asarray(vecs))
-
-#     # Keep it minimal & portable: sklearn only
-#     index = NearestNeighbors(metric="cosine")
-#     index.fit(vecs)
-
-#     return {
-#         "model": model,
-#         "vectors": vecs,
-#         "index": index,
-#         "ids": ids,
-#         "names": names,
-#         "texts": texts
-#     }
 def build_vector_space(df: pd.DataFrame, model_name: str = "sentence-transformers/all-MiniLM-L6-v2") -> Dict:
     """
     Build a cosine-similarity search index over profile texts.
@@ -174,23 +126,6 @@ def embed_person_text(writeup: str, bundle: Dict) -> np.ndarray:
     q = bundle["model"].encode([writeup], convert_to_numpy=True, show_progress_bar=False)
     return l2_normalize(q)
 
-# def top_k_matches(query_vec: np.ndarray, bundle: Dict, k: int = 5, min_similarity: float = 0.0) -> pd.DataFrame:
-#     """
-#     Search the index and return the top-k profiles sorted by cosine similarity.
-#     Returns a DataFrame with rank, id, name, similarity, snippet.
-#     """
-#     ids, names, texts, emails = bundle["ids"], bundle["names"], bundle["texts"], bundle.get("emails", [])
-#     k = int(min(max(k, 1), len(ids)))
-#     dists, idxs = bundle["index"].kneighbors(query_vec, n_neighbors=k)
-#     cosines = (1.0 - dists[0])
-#     idxs = idxs[0]
-#     rows = []
-#     for r, (sim, i) in enumerate(zip(cosines, idxs), start=1):
-#         if sim < float(min_similarity):
-#             continue
-#         snippet = texts[i] if len(texts[i]) <= 500 else (texts[i][:500] + "…")
-#         rows.append({"rank": r, "name": names[i], "similarity": float(sim), "snippet": snippet}) #"id": ids[i], "name": names[i], "similarity": float(sim), "snippet": snippet})
-#     return pd.DataFrame(rows, columns=["rank","name","similarity","snippet"])#"id","name","similarity","snippet"])
 def top_k_matches(query_vec: np.ndarray, bundle: Dict, k: int = 5, min_similarity: float = 0.0) -> pd.DataFrame:
     """
     Search the index and return the top-k profiles sorted by cosine similarity.
