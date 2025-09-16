@@ -70,11 +70,11 @@ BUNDLE_SCHEMA_VERSION = "v2-email-mapped"
 st.title("🔬 Lab Match — Vertical Slice")
 st.caption("Paste your interests; see the closest PI profiles from the sample dataset. Deterministic for fixed model + data.")
 
-with st.sidebar:
-    st.header("Settings")
-    csv_path = st.text_input("Dataset path", "data/Synthetic_Dataset.csv")
-    k = st.slider("Top-K", min_value=1, max_value=10, value=5, step=1)
-    min_sim = st.slider("Min similarity", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+# with st.sidebar:
+#     st.header("Settings")
+#     csv_path = st.text_input("Dataset path", "data/Synthetic_Dataset.csv")
+#     k = st.slider("Top-K", min_value=1, max_value=10, value=5, step=1)
+#     min_sim = st.slider("Min similarity", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
 
 # @st.cache_resource(show_spinner=False)
 # def _load_bundle(_csv_path: str):
@@ -92,7 +92,7 @@ def _load_bundle(_csv_path: str, _schema_version: str):
 
 with st.sidebar:
     st.header("Settings")
-    csv_path = st.text_input("Dataset path", "data/Prototype Dataset.csv")
+    csv_path = st.text_input("Dataset path", "data/Synthetic_Dataset.csv")
     k = st.slider("Top-K", min_value=1, max_value=10, value=5, step=1)
     min_sim = st.slider("Min similarity", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
     if st.button("🔁 Rebuild index (clear cache)"):
